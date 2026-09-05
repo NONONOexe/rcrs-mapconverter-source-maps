@@ -7,7 +7,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>RCRS MapConverter Source Maps</h1>
+  <div class="page-header">
+    <h1>RCRS MapConverter Source Maps</h1>
+
+    <div class="lang-switcher">
+      <button id="lang-en" type="button">English</button>
+      <button id="lang-ja" type="button">日本語</button>
+    </div>
+  </div>
 
   <div class="table-container">
     <table>
@@ -19,43 +26,98 @@
   </div>
 
   <script>
-    const columns = [
-      { key: 'file', label: 'File', format: v => v.split('/').pop().replace(/\.osm$/, '') },
-      { key: 'city_en', label: 'City' },
-      { key: 'county_en', label: 'County' },
-      { key: 'state_en', label: 'State' },
-      { key: 'country_en', label: 'Country' },
-      { key: 'center_lon', label: 'Center Longitude', numeric: true, format: v => v.toFixed(4) },
-      { key: 'center_lat', label: 'Center Latitude', numeric: true, format: v => v.toFixed(4) },
-      { key: 'bbox_width_km', label: 'BBox Width (km)', numeric: true, format: v => v.toFixed(1) },
-      { key: 'bbox_height_km', label: 'BBox Height (km)', numeric: true, format: v => v.toFixed(1) },
-      { key: 'n_features', label: 'Features', numeric: true },
-      { key: 'file', label: 'Full Path' },
-      { key: 'file_size_mb', label: 'File Size (MB)', numeric: true, format: v => v.toFixed(2) }
-    ];
+        const translations = {
+      en: {
+        file: 'File',
+        city: 'City',
+        county: 'County',
+        state: 'State',
+        country: 'Country',
+        center_lon: 'Center Longitude',
+        center_lat: 'Center Latitude',
+        bbox_width_km: 'Width (km)',
+        bbox_height_km: 'Height (km)',
+        n_features: 'Features',
+        full_path: 'Full Path',
+        file_size_mb: 'File Size (MB)'
+      },
+      ja: {
+        file: 'ファイル名',
+        city: '都市',
+        county: '郡',
+        state: '州',
+        country: '国',
+        center_lon: '中心経度',
+        center_lat: '中心緯度',
+        bbox_width_km: '幅 (km)',
+        bbox_height_km: '高さ (km)',
+        n_features: '要素数',
+        full_path: 'ファイルパス',
+        file_size_mb: 'ファイルサイズ (MB)'
+      }
+    };
 
+    function getColumns(lang) {
+      const t = translations[lang];
+      const suffix = lang === 'ja' ? '_ja' : '_en';
+      return [
+        { key: 'file', label: t.file, format: v => v.split('/').pop().replace(/\.osm$/, '') },
+        { key: `city${suffix}`, label: t.city },
+        { key: `county${suffix}`, label: t.county },
+        { key: `state${suffix}`, label: t.state },
+        { key: `country${suffix}`, label: t.country },
+        { key: 'center_lon', label: t.center_lon, numeric: true, format: v => v.toFixed(4) },
+        { key: 'center_lat', label: t.center_lat, numeric: true, format: v => v.toFixed(4) },
+        { key: 'bbox_width_km', label: t.bbox_width_km, numeric: true, format: v => v.toFixed(1) },
+        { key: 'bbox_height_km', label: t.bbox_height_km, numeric: true, format: v => v.toFixed(1) },
+        { key: 'n_features', label: t.n_features, numeric: true },
+        { key: 'file', label: t.full_path },
+        { key: 'file_size_mb', label: t.file_size_mb, numeric: true, format: v => v.toFixed(2) }
+      ];
+    }
+
+    let mapData = [];
+
+    function render(lang) {
+      document.documentElement.lang = lang;
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-ja').classList.toggle('active', lang === 'ja');
+ 
+      const columns = getColumns(lang);
+ 
+      const headerRow = document.getElementById('map-table-header');
+      headerRow.innerHTML = '';
+      columns.forEach(column => {
+        const th = document.createElement('th');
+        th.textContent = column.label;
+        if (column.numeric) th.classList.add('numeric');
+        headerRow.appendChild(th);
+      });
+ 
+      const tbody = document.getElementById('map-table-body');
+      tbody.innerHTML = '';
+      mapData.forEach(element => {
+        const row = document.createElement('tr');
+        columns.forEach(column => {
+          const cell = document.createElement('td');
+          const value = element[column.key];
+          cell.textContent = value == null ? '' : (column.format ? column.format(value) : value);
+          cell.title = cell.textContent;
+          if (column.numeric) cell.classList.add('numeric');
+          row.appendChild(cell);
+        });
+        tbody.appendChild(row);
+      });
+    }
+ 
+    document.getElementById('lang-en').addEventListener('click', () => render('en'));
+    document.getElementById('lang-ja').addEventListener('click', () => render('ja'));
+ 
     fetch('data/map-address.json')
       .then(response => response.json())
       .then(maps => {
-        const headerRow = document.getElementById('map-table-header');
-        columns.forEach(column => {
-          const th = document.createElement('th');
-          th.textContent = column.label;
-          headerRow.appendChild(th);
-        });
-
-        const tbody = document.getElementById('map-table-body');
-        maps.forEach(element => {
-          const row = document.createElement('tr');
-          columns.forEach(column => {
-            const cell = document.createElement('td');
-            const value = element[column.key];
-            cell.textContent = value == null ? '' : (column.format ? column.format(value) : value);
-            if (column.numeric) cell.classList.add('numeric');
-            row.appendChild(cell);
-          });
-          tbody.appendChild(row);
-        });
+        mapData = maps;
+        render('en');
       });
   </script>
 </body>

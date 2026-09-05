@@ -17,19 +17,56 @@ body {
   padding: 2rem;
   overflow-x: hidden;
 }
- 
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
 h1 {
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 1.5rem;
 }
 
+.lang-switcher {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+ 
+.lang-switcher button {
+  font-family: inherit;
+  font-size: 0.85rem;
+  background: #fff;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+}
+ 
+.lang-switcher button:hover {
+  border-color: var(--text-color);
+}
+ 
+.lang-switcher button.active {
+  background: var(--text-color);
+  color: #fff;
+  border-color: var(--text-color);
+}
+
 .table-container {
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow: auto;
+  max-height: 80vh;
+  border: 1px solid var(--border-color);
 }
  
 table {
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
@@ -43,7 +80,23 @@ td {
   padding: 0.5rem 0.75rem;
   text-align: left;
   white-space: nowrap;
+  overflow: hidden;
+  line-height: 1.4;
+  text-overflow: ellipsis;
 }
+
+th:nth-child(1), td:nth-child(1) { width: 9em; }  /* File */
+th:nth-child(2), td:nth-child(2) { width: 9em; }  /* City */
+th:nth-child(3), td:nth-child(3) { width: 9em; }  /* County */
+th:nth-child(4), td:nth-child(4) { width: 9em; }  /* State */
+th:nth-child(5), td:nth-child(5) { width: 9em; }  /* Country */
+th:nth-child(6), td:nth-child(6) { width: 10em; } /* Center Longitude */
+th:nth-child(7), td:nth-child(7) { width: 10em; } /* Center Latitude */
+th:nth-child(8), td:nth-child(8) { width: 9em; }  /* BBox Width */
+th:nth-child(9), td:nth-child(9) { width: 9em; }  /* BBox Height */
+th:nth-child(10), td:nth-child(10) { width: 7em; } /* Features */
+th:nth-child(11), td:nth-child(11) { width: 18em; } /* Full Path */
+th:nth-child(12), td:nth-child(12) { width: 9em; } /* File Size */
  
 thead th {
   position: sticky;
