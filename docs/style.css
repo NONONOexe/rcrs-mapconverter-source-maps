@@ -85,18 +85,19 @@ td {
   text-overflow: ellipsis;
 }
 
-th:nth-child(1), td:nth-child(1) { width: 9em; }  /* File */
-th:nth-child(2), td:nth-child(2) { width: 9em; }  /* City */
-th:nth-child(3), td:nth-child(3) { width: 9em; }  /* County */
-th:nth-child(4), td:nth-child(4) { width: 9em; }  /* State */
-th:nth-child(5), td:nth-child(5) { width: 9em; }  /* Country */
-th:nth-child(6), td:nth-child(6) { width: 10em; } /* Center Longitude */
-th:nth-child(7), td:nth-child(7) { width: 10em; } /* Center Latitude */
-th:nth-child(8), td:nth-child(8) { width: 9em; }  /* BBox Width */
-th:nth-child(9), td:nth-child(9) { width: 9em; }  /* BBox Height */
-th:nth-child(10), td:nth-child(10) { width: 7em; } /* Features */
-th:nth-child(11), td:nth-child(11) { width: 18em; } /* Full Path */
-th:nth-child(12), td:nth-child(12) { width: 9em; } /* File Size */
+th:nth-child(1), td:nth-child(1) { width: 9em; }    /* File */
+th:nth-child(2), td:nth-child(2) { width: 9em; }    /* City */
+th:nth-child(3), td:nth-child(3) { width: 9em; }    /* County */
+th:nth-child(4), td:nth-child(4) { width: 9em; }    /* State */
+th:nth-child(5), td:nth-child(5) { width: 9em; }    /* Country */
+th:nth-child(6), td:nth-child(6) { width: 4em; }    /* Map */
+th:nth-child(7), td:nth-child(7) { width: 10em; }   /* Center Longitude */
+th:nth-child(8), td:nth-child(8) { width: 10em; }   /* Center Latitude */
+th:nth-child(9), td:nth-child(9) { width: 9em; }    /* BBox Width */
+th:nth-child(10), td:nth-child(10) { width: 9em; }  /* BBox Height */
+th:nth-child(11), td:nth-child(11) { width: 7em; }  /* Features */
+th:nth-child(12), td:nth-child(12) { width: 18em; } /* Full Path */
+th:nth-child(13), td:nth-child(13) { width: 9em; }  /* File Size */
  
 thead th {
   position: sticky;
@@ -129,4 +130,22 @@ tbody tr:nth-child(even) td:first-child {
  
 thead th:first-child {
   z-index: 2;
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4545;
+  text-decoration: none;
+  width: 100%;
+}
+
+.map-link:hover {
+  color: #e22e2e;
+  text-decoration: none;
+}
+
+.map-link i {
+  font-size: 1rem;
 }

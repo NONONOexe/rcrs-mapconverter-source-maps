@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RCRS MapConverter Source Maps</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
 </head>
 <body>
   <div class="page-header">
@@ -33,6 +34,8 @@
         county: 'County',
         state: 'State',
         country: 'Country',
+        map: 'Map',
+        map_title: 'View location on map',
         center_lon: 'Center Longitude',
         center_lat: 'Center Latitude',
         bbox_width_km: 'Width (km)',
@@ -47,6 +50,8 @@
         county: '郡',
         state: '州',
         country: '国',
+        map: '地図',
+        map_title: '地図で場所を見る',
         center_lon: '中心経度',
         center_lat: '中心緯度',
         bbox_width_km: '幅 (km)',
@@ -66,6 +71,7 @@
         { key: `county${suffix}`, label: t.county },
         { key: `state${suffix}`, label: t.state },
         { key: `country${suffix}`, label: t.country },
+        { key: 'map', label: t.map, map: true, title: t.map_title },
         { key: 'center_lon', label: t.center_lon, numeric: true, format: v => v.toFixed(4) },
         { key: 'center_lat', label: t.center_lat, numeric: true, format: v => v.toFixed(4) },
         { key: 'bbox_width_km', label: t.bbox_width_km, numeric: true, format: v => v.toFixed(1) },
@@ -90,25 +96,53 @@
       columns.forEach(column => {
         const th = document.createElement('th');
         th.textContent = column.label;
+        th.title = column.title || '';
         if (column.numeric) th.classList.add('numeric');
         headerRow.appendChild(th);
       });
- 
+
       const tbody = document.getElementById('map-table-body');
       tbody.innerHTML = '';
+
       mapData.forEach(element => {
         const row = document.createElement('tr');
+
         columns.forEach(column => {
           const cell = document.createElement('td');
-          const value = element[column.key];
-          cell.textContent = value == null ? '' : (column.format ? column.format(value) : value);
-          cell.title = cell.textContent;
+
+          if (column.map) {
+            const link = document.createElement('a');
+            const lon = element.center_lon;
+            const lat = element.center_lat;
+
+            link.href = `https://www.openstreetmap.org/#map=12/${lat}/${lon}`;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.className = 'map-link';
+            link.title = translations[lang].map;
+            link.setAttribute('aria-label', translations[lang].map);
+
+            const icon = document.createElement('i');
+            icon.className = 'fa-solid fa-map-pin';
+            icon.setAttribute('aria-hidden', 'true');
+
+            link.appendChild(icon);
+            cell.appendChild(link);
+          } else {
+            const value = element[column.key];
+            cell.textContent = value == null
+              ? ''
+              : (column.format ? column.format(value) : value);
+            cell.title = cell.textContent;
+          }
+
           if (column.numeric) cell.classList.add('numeric');
           row.appendChild(cell);
         });
+
         tbody.appendChild(row);
       });
-    }
+    };
  
     document.getElementById('lang-en').addEventListener('click', () => render('en'));
     document.getElementById('lang-ja').addEventListener('click', () => render('ja'));
