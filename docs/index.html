@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RCRS MapConverter Source Maps</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>RCRS MapConverter Source Maps</h1>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr id="map-table-header"></tr>
+      </thead>
+      <tbody id="map-table-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const columns = [
+      { key: 'file', label: 'File', format: v => v.split('/').pop().replace(/\.osm$/, '') },
+      { key: 'city_en', label: 'City' },
+      { key: 'county_en', label: 'County' },
+      { key: 'state_en', label: 'State' },
+      { key: 'country_en', label: 'Country' },
+      { key: 'center_lon', label: 'Center Longitude', numeric: true, format: v => v.toFixed(4) },
+      { key: 'center_lat', label: 'Center Latitude', numeric: true, format: v => v.toFixed(4) },
+      { key: 'bbox_width_km', label: 'BBox Width (km)', numeric: true, format: v => v.toFixed(1) },
+      { key: 'bbox_height_km', label: 'BBox Height (km)', numeric: true, format: v => v.toFixed(1) },
+      { key: 'n_features', label: 'Features', numeric: true },
+      { key: 'file', label: 'Full Path' },
+      { key: 'file_size_mb', label: 'File Size (MB)', numeric: true, format: v => v.toFixed(2) }
+    ];
+
+    fetch('data/map-address.json')
+      .then(response => response.json())
+      .then(maps => {
+        const headerRow = document.getElementById('map-table-header');
+        columns.forEach(column => {
+          const th = document.createElement('th');
+          th.textContent = column.label;
+          headerRow.appendChild(th);
+        });
+
+        const tbody = document.getElementById('map-table-body');
+        maps.forEach(element => {
+          const row = document.createElement('tr');
+          columns.forEach(column => {
+            const cell = document.createElement('td');
+            const value = element[column.key];
+            cell.textContent = value == null ? '' : (column.format ? column.format(value) : value);
+            if (column.numeric) cell.classList.add('numeric');
+            row.appendChild(cell);
+          });
+          tbody.appendChild(row);
+        });
+      });
+  </script>
+</body>
+</html>
